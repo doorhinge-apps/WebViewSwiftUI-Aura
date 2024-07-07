@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "ios-vendor-lux",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hassanvfx/ios-vendor-Lux",
+      "state" : {
+        "revision" : "3e330f8c0b3877cbed5ae9d6a6ae25bc10910a02",
+        "version" : "1.2.7"
+      }
+    }
+  ],
+  "version" : 2
+}
