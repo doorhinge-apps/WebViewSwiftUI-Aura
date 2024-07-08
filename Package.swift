@@ -14,13 +14,11 @@ let package = Package(
             targets: ["WebViewSwiftUI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/hassanvfx/ios-vendor-Lux", exact: "1.2.7"),
     ],
     targets: [
         .target(
             name: "WebViewSwiftUI",
             dependencies: [
-                .product(name: "Lux", package: "ios-vendor-Lux")
             ]),
         .testTarget(
             name: "WebViewSwiftUITests",
