@@ -39,7 +39,6 @@ public struct LoaderNavBar: View {
                 .fill(Color.white)
                 .allowsHitTesting(false)
                 .disabled(true)
-                .scaleEffect(self.webViewStore.progress)
         )
         .frame(height: 2)
         .clipped()
