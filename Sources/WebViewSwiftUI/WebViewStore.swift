@@ -154,10 +154,6 @@ extension WebViewStore {
             }
         }
     }
-
-    var progress: CGFloat {
-        1.0 - webView.estimatedProgress.cgFloat
-    }
 }
 
 
