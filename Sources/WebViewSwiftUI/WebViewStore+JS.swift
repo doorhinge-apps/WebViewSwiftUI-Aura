@@ -63,11 +63,14 @@ extension WebViewStore {
 extension WebViewStore {
     public func JSperformScript(script: String..., completion: ((Any?) -> Void)? = nil) {
         let singleScript = script.joined(separator: ";")
-        webView
-            .evaluateJavaScript(singleScript,
-                                completionHandler: { (result: Any?, error: Error?) in
-                assert(error == nil, "Script failed: '\(singleScript)'")
-                completion?(result)
-            })
+        webView.evaluateJavaScript(singleScript) { (result: Any?, error: Error?) in
+            if let error = error {
+                print("Script failed: '\(singleScript)' with error: \(error.localizedDescription)")
+                completion?(nil)
+                return
+            }
+            completion?(result)
+        }
     }
 }
+
