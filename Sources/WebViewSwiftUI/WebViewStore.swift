@@ -78,6 +78,26 @@ public struct WebView: View, UIViewRepresentable {
     public init(webView: WKWebView) {
         self.webView = webView
     }
+    
+    func buildMenu(with builder: UIMenuBuilder) {
+        guard builder.system == UIMenuSystem.main else {
+            return
+        }
+        
+        let customMenu = UIMenu(title: "Custom Actions", image: nil, identifier: UIMenu.Identifier("com.yourapp.customMenu"), options: .displayInline, children: [
+                            UIAction(title: "Custom Action 1", image: UIImage(systemName: "star"), handler: { _ in
+                                // Handle custom action 1
+                                print("Custom action 1 tapped")
+                            }),
+                            UIAction(title: "Custom Action 2", image: UIImage(systemName: "heart"), handler: { _ in
+                                // Handle custom action 2
+                                print("Custom action 2 tapped")
+                            })
+                        ])
+        
+        builder.insertSibling(customMenu, afterMenu: UIMenu.Identifier.file)
+        //builder.remove(menu: UIMenu.Identifier.file)
+    }
 
     public func makeUIView(context _: UIViewRepresentableContext<WebView>) -> WebView.UIViewType {
         return UIViewContainerView()
