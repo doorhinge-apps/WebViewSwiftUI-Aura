@@ -69,47 +69,50 @@ extension WebViewStore{
 }
 
 /// A container for using a WKWebView in SwiftUI
-public struct WebView: View, UIViewRepresentable {
-    /// The WKWebView to display
+public struct WebView: UIViewRepresentable {
     public let webView: WKWebView
-
-    public typealias UIViewType = UIViewContainerView<WKWebView>
 
     public init(webView: WKWebView) {
         self.webView = webView
     }
-    
-    func buildMenu(with builder: UIMenuBuilder) {
-        guard builder.system == UIMenuSystem.main else {
-            return
-        }
-        
-        let customMenu = UIMenu(title: "Custom Actions", image: nil, identifier: UIMenu.Identifier("com.yourapp.customMenu"), options: .displayInline, children: [
-                            UIAction(title: "Custom Action 1", image: UIImage(systemName: "star"), handler: { _ in
-                                // Handle custom action 1
-                                print("Custom action 1 tapped")
-                            }),
-                            UIAction(title: "Custom Action 2", image: UIImage(systemName: "heart"), handler: { _ in
-                                // Handle custom action 2
-                                print("Custom action 2 tapped")
-                            })
-                        ])
-        
-        builder.insertSibling(customMenu, afterMenu: UIMenu.Identifier.file)
-        //builder.remove(menu: UIMenu.Identifier.file)
+
+    public func makeUIView(context: Context) -> UIViewContainerView<WKWebView> {
+        let uiView = UIViewContainerView<WKWebView>()
+        uiView.contentView = webView
+        webView.uiDelegate = context.coordinator
+        return uiView
     }
 
-    public func makeUIView(context _: UIViewRepresentableContext<WebView>) -> WebView.UIViewType {
-        return UIViewContainerView()
-    }
-
-    public func updateUIView(_ uiView: WebView.UIViewType, context _: UIViewRepresentableContext<WebView>) {
-        // If its the same content view we don't need to update.
+    public func updateUIView(_ uiView: UIViewContainerView<WKWebView>, context: Context) {
+        // If it's the same content view we don't need to update.
         if uiView.contentView !== webView {
             uiView.contentView = webView
 
             webView.backgroundColor = .clear
             uiView.backgroundColor = .clear
+        }
+    }
+
+    public func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    public class Coordinator: NSObject, WKUIDelegate {
+        var parent: WebView
+
+        init(_ parent: WebView) {
+            self.parent = parent
+        }
+
+        public func webView(_ webView: WKWebView, contextMenuConfigurationForElement elementInfo: WKContextMenuElementInfo, completionHandler: @escaping (UIContextMenuConfiguration?) -> Void) {
+            let shareAction = UIAction(title: "Send to Friend", image: UIImage(systemName: "square.and.arrow.up")) { _ in
+                // Handle action here
+                print("Send to Friend")
+            }
+            let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+                UIMenu(title: "Actions", children: [shareAction])
+            }
+            completionHandler(configuration)
         }
     }
 }
