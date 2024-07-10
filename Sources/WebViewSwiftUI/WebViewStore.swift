@@ -106,6 +106,7 @@ public struct WebView: UIViewRepresentable {
         }
         
         public func webView(_ webView: WKWebView, contextMenuConfigurationForElement elementInfo: WKContextMenuElementInfo, completionHandler: @escaping (UIContextMenuConfiguration?) -> Void) {
+            
             let shareAction = UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { _ in
                 guard let url = elementInfo.linkURL else { return }
                 let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
