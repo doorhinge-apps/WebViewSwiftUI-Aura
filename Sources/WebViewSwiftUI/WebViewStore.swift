@@ -8,6 +8,7 @@
 
 import Combine
 import SwiftUI
+import UIKit
 import WebKit
 
 public class WebViewStore: NSObject, ObservableObject,WKNavigationDelegate {
@@ -103,14 +104,22 @@ public struct WebView: UIViewRepresentable {
         init(_ parent: WebView) {
             self.parent = parent
         }
-
+        
         public func webView(_ webView: WKWebView, contextMenuConfigurationForElement elementInfo: WKContextMenuElementInfo, completionHandler: @escaping (UIContextMenuConfiguration?) -> Void) {
-            let shareAction = UIAction(title: "Send to Friend", image: UIImage(systemName: "square.and.arrow.up")) { _ in
-                // Handle action here
-                print("Send to Friend")
+            let shareAction = UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { _ in
+                guard let url = elementInfo.linkURL else { return }
+                let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                if let topVC = UIApplication.shared.windows.first?.rootViewController {
+                    topVC.present(activityVC, animated: true, completion: nil)
+                }
+                
+                guard let data = elementInfo.linkURL else { return }
+                let av = UIActivityViewController(activityItems: [data], applicationActivities: nil)
+                UIApplication.shared.windows.first?.rootViewController?.present(av, animated: true, completion: nil)
             }
+            
             let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-                UIMenu(title: "Actions", children: [shareAction])
+                UIMenu(children: [shareAction])
             }
             completionHandler(configuration)
         }
